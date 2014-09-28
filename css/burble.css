@@ -1,0 +1,12 @@
+div#burble
+{
+    position:fixed;
+    right:20px;
+    top:0px;
+    text-align: right;
+}
+
+div#burble form input
+{
+    display:block;
+}
