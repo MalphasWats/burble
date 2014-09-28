@@ -7,6 +7,6 @@ title: Burble
     <article class="blurb">
         <h1>{{post.author}}</h1>
             {{post.content}}
-        <p class="blurb_date">{{ post.date | date_to_string }}</p>
+        <p class="blurb_date">{{ post.date | date_to_rfc822 }}</p>
     </article>
 {% endfor %}
