@@ -4,9 +4,9 @@ title: Burble
 ---
 
 {% for post in site.posts limit:20 %}
-    <article class="blurb">
-        <h1>{{post.author}}</h1>
-            {{post.content}}
-        <p class="blurb_date">{{ post.date | date_to_rfc822 }}</p>
-    </article>
+    	    <article class="blurb">
+        	    <h1>{{post.author}}</h1>
+            	    {{post.content}}
+        	    <p class="blurb_date">{{ post.date | date_to_rfc822 }}</p>
+    	    </article>
 {% endfor %}
