@@ -1,0 +1,7 @@
+---
+layout: index
+title: 00:00:00
+date: 2014-09-28 00:00:00
+---
+
+This is a test blurb
