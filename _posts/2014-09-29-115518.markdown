@@ -1,0 +1,8 @@
+---
+layout: index
+title: 11:55:18
+date: 2014-09-29 11:55:18
+---
+New blog post: [Barriers](http://www.subdimension.co.uk/2014/09/29/Barriers.html)
+
+and also testing putting links and things in blurbs.
