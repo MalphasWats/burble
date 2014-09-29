@@ -22,13 +22,13 @@
         e.preventDefault();   
         var f = document.createElement('form');
         
-        var t = burble.create_input('username', 'GitHub Username');
+        var t = burble.create_text_input('username', 'GitHub Username');
         f.appendChild(t);
         
-        t = burble.create_input('email', 'E-mail Address');
+        t = burble.create_text_input('email', 'E-mail Address');
         f.appendChild(t);
         
-        t = burble.create_input('token', 'API Token');
+        t = burble.create_password_input('token', 'API Token');
         f.appendChild(t);
         
         
@@ -129,7 +129,7 @@
         }
     }
     
-    Burble.prototype.create_input = function(id, label)
+    Burble.prototype.create_text_input = function(id, label)
     {
         var ip = document.createElement('input');
         ip.type = 'text';
@@ -151,6 +151,36 @@
             {
                 this.value=this.title;
                 this.style.color='#ccc';
+            }
+        });
+        
+        return ip;
+    }
+	
+	Burble.prototype.create_password_input = function(id, label)
+    {
+        var ip = document.createElement('input');
+        ip.type = 'text';
+        ip.title = label;
+        ip.id = id;
+        ip.value = label;
+        ip.style.color = '#ccc'
+	    ip.addEventListener('focus', function(e)
+	    {
+            if (this.value == this.title)
+            {
+                this.value = "";
+	            this.style.color = 'black';
+				this.type = 'password';
+	        }
+        });
+	    ip.addEventListener('blur', function(e)
+        {
+            if (this.value == "")
+            {
+                this.value=this.title;
+                this.style.color='#ccc';
+				this.type = 'text';
             }
         });
         
