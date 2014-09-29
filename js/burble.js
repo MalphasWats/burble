@@ -107,13 +107,8 @@
         
             req.open('PUT', url)
             req.setRequestHeader("Authorization", "token "+f.token.value);
-            try{
             req.setRequestHeader("User-Agent", f.username.value);
-            }
-            catch(e)
-            {
-                req.setRequestHeader("X-User-Agent", f.username.value);
-            }
+            req.setRequestHeader("X-User-Agent", f.username.value);
             
             data = {
 				path: filename,
