@@ -4,51 +4,94 @@
     {
         var panel = document.createElement('div');
         panel.id = 'burble';
-        
-        var compose_link = document.createElement('a');
-        compose_link.href='#';
-        compose_link.innerHTML = 'compose';
-        compose_link.addEventListener('click', this.expand_compose_panel);
-        
-        panel.appendChild(compose_link);
-        
-        
-        
+		
+		var action_link = document.createElement('a');
+		action_link.href='#';
+		
+		action_link.collapse = this.collapse_compose_panel;
+		action_link.expand = this.expand_compose_panel;
+		
+		action_link.addEventListener('click', action_link.expand);
+		
+		/* Check to see if authenticated */
+		if (this.is_logged_in())
+		{
+			action_link.innerHTML = 'compose';
+		}
+		else
+		{
+			action_link.innerHTML = 'login';
+		}
+		
+        panel.appendChild(action_link);
+		
         document.body.insertBefore(panel, document.body.firstChild)
+    }
+	
+	Burble.prototype.is_logged_in = function()
+	{
+		return (localStorage.github_username && localStorage.github_email && localStorage.github_api_key)
+	}
+	
+	Burble.prototype.expand_login_panel = function(e)
+    {
+        e.preventDefault();   
+        var f = document.createElement('form');
+		
+        var b = document.getElementById('burble')
+        b.appendChild(f);
+        var a = b.firstChild;
+        a.removeEventListener('click', burble.expand_login_panel);
+        a.innerHTML = 'cancel';
+        a.addEventListener('click', burble.collapse_compose_panel);
     }
     
     Burble.prototype.expand_compose_panel = function(e)
     {
-        e.preventDefault();   
+        e.preventDefault();
+		
+		var b = document.getElementById('burble');
+		var a = b.firstChild;
+		
         var f = document.createElement('form');
+		
+		if (burble.is_logged_in())
+		{
+			t = document.createElement('textarea');
+			t.id='blurb';
+			t.cols = '25';
+			t.rows = '8';
         
-        var t = burble.create_text_input('username', 'GitHub Username');
-        f.appendChild(t);
+			f.appendChild(t);
         
-        t = burble.create_text_input('email', 'E-mail Address');
-        f.appendChild(t);
+			var s = document.createElement('input');
+			s.type = 'submit';
+			s.value = 'post';
+			f.appendChild(s);
+			
+			f.addEventListener('submit', burble.submit_blurb);
+		}
+		else
+		{
+			var t = burble.create_text_input('username', 'GitHub Username');
+			f.appendChild(t);
+			
+			t = burble.create_text_input('email', 'E-mail Address');
+			f.appendChild(t);
+			
+			t = burble.create_password_input('token', 'API Token');
+			f.appendChild(t);
+			
+			var s = document.createElement('input');
+			s.type = 'submit';
+			s.value = 'post';
+			f.appendChild(s);
+			
+			f.addEventListener('submit', burble.login);
+		}
         
-        t = burble.create_password_input('token', 'API Token');
-        f.appendChild(t);
-        
-        
-        t = document.createElement('textarea');
-        t.id='blurb';
-        t.cols = '25';
-        t.rows = '8';
-        
-        f.appendChild(t);
-        
-        var b = document.createElement('input');
-        b.type = 'submit';
-        b.value = 'post';
-        f.appendChild(b);
-        
-        f.addEventListener('submit', burble.submit_blurb);
-        
-        var b = document.getElementById('burble')
         b.appendChild(f);
-        var a = b.firstChild;
+        
         a.removeEventListener('click', burble.expand_compose_panel);
         a.innerHTML = 'cancel';
         a.addEventListener('click', burble.collapse_compose_panel);
@@ -60,68 +103,123 @@
         
         var b = document.getElementById('burble');
         var a = b.firstChild;
-        var f = b.getElementsByTagName('form')[0];
+        var f = a.nextSibling;
         
         b.removeChild(f);
         
         a.removeEventListener('click', burble.collapse_compose_panel);
-        a.innerHTML = 'compose';
+		if (burble.is_logged_in())
+		{
+			a.innerHTML = 'compose';
+		}
+		else
+		{
+			a.innerHTML = 'login';
+		}
         a.addEventListener('click', burble.expand_compose_panel);
     }
+	
+	Burble.prototype.login = function(e)
+	{
+		e.preventDefault();
+		var b = document.getElementById('burble');
+        var f = b.getElementsByTagName('form')[0];
+		
+		if (f.username.value != '' && f.username.value != f.username.title &&
+			f.email.value != '' && f.email.value != f.email.title &&
+			f.token.value != '' && f.token.value != f.token.title)
+        {
+			var filename = "index.html";
+			var url = 'https://api.github.com/repos/'+f.username.value+'/burble/contents/'+filename+'?path='+filename+'&ref=gh-pages';
+			
+			var req = new XMLHttpRequest()
+			req.onreadystatechange = function()
+			{
+				if (this.readyState == 4)
+				{
+					if (this.status != 200)
+					{
+						console.log("An error occurred whilst trying to make request", this.status, this.responseText)
+					}
+					else
+					{
+						var b = document.getElementById('burble');
+						var f = b.getElementsByTagName('form')[0];
+						
+						localStorage.github_username = f.username.value;
+						localStorage.github_email = f.email.value;
+						localStorage.github_api_key = f.token.value;
+						
+						burble.collapse_compose_panel(e);
+					}
+				}
+			}
+		
+			req.open('GET', url);
+			req.setRequestHeader("Authorization", "token "+f.token.value);
+			req.setRequestHeader("User-Agent", f.username.value);
+			
+			req.send(null);
+		}
+	}
     
     Burble.prototype.submit_blurb = function(e)
     {
         e.preventDefault();
         var b = document.getElementById('burble');
         var f = b.getElementsByTagName('form')[0];
-        
-        if (f.username.value != '' && f.email.value != '' && f.token.value != '')
-        {
-            var ts = new Date();
-            var time = ('0' + ts.getHours()).slice(-2) + ':' + ('0' + ts.getMinutes()).slice(-2) + ':' + ('0' + ts.getSeconds()).slice(-2);
-            var date = ts.getFullYear() + '-' + ('0' + (ts.getMonth()+1)).slice(-2) + '-' + ('0' + ts.getDate()).slice(-2);
-            var yaml = "---\nlayout: index\ntitle: "+time+"\ndate: "+date+" "+time+"\n---\n";
-            
-            var blurb = yaml + f.blurb.value;
-            
-            var filename = "_posts/"+date+"-"+time.replace(/:/g, "")+".markdown";
-            
-            var url = 'https://api.github.com/repos/'+f.username.value+'/burble/contents/'+filename
-            
-            console.log(filename, yaml+f.blurb.value);
-            var req = new XMLHttpRequest()
-            req.onreadystatechange = function()
-            {
-                if (this.readyState == 4)
-                {
-                    if (this.status != 200 && this.status != 201)
-                    {
-                        console.log("An error occurred whilst trying to make request", this.status, this.responseText)
-                    }
-                    else
-                    {
-                        burble.collapse_compose_panel(e);
-                    }
-                }
-            }
-        
-            req.open('PUT', url)
-            req.setRequestHeader("Authorization", "token "+f.token.value);
-            req.setRequestHeader("User-Agent", f.username.value);
-            req.setRequestHeader("X-User-Agent", f.username.value);
-            
-            data = {
-				path: filename,
-				content: btoa(yaml+f.blurb.value),
-				message: 'post blurb',
-				branch: 'gh-pages',
-				committer: {name: f.username.value, email: f.email.value}
+		
+		if (f.blurb.value == 'logout')
+		{
+			delete localStorage.github_username;
+			delete localStorage.github_email;
+			delete localStorage.github_api_key;
+			
+			burble.collapse_compose_panel(e);
+			
+			return;
+		}
+		
+		var ts = new Date();
+		var time = ('0' + ts.getHours()).slice(-2) + ':' + ('0' + ts.getMinutes()).slice(-2) + ':' + ('0' + ts.getSeconds()).slice(-2);
+		var date = ts.getFullYear() + '-' + ('0' + (ts.getMonth()+1)).slice(-2) + '-' + ('0' + ts.getDate()).slice(-2);
+		var yaml = "---\nlayout: index\ntitle: "+time+"\ndate: "+date+" "+time+"\n---\n";
+		
+		var blurb = yaml + f.blurb.value;
+		
+		var filename = "_posts/"+date+"-"+time.replace(/:/g, "")+".markdown";
+		
+		var url = 'https://api.github.com/repos/'+localStorage.github_username+'/burble/contents/'+filename
+		
+		var req = new XMLHttpRequest()
+		req.onreadystatechange = function()
+		{
+			if (this.readyState == 4)
+			{
+				if (this.status != 200 && this.status != 201)
+				{
+					console.log("An error occurred whilst trying to make request", this.status, this.responseText)
+				}
+				else
+				{
+					burble.collapse_compose_panel(e);
+				}
 			}
-                        
-            req.send(JSON.stringify(data))
-            
-            
-        }
+		}
+	
+		req.open('PUT', url);
+		req.setRequestHeader("Authorization", "token "+localStorage.github_api_key);
+		req.setRequestHeader("User-Agent", localStorage.github_username);
+		
+		data = {
+			path: filename,
+			content: btoa(yaml+f.blurb.value),
+			message: 'post blurb',
+			branch: 'gh-pages',
+			committer: {name: localStorage.github_username, email: localStorage.github_email}
+		};
+					
+		req.send(JSON.stringify(data));
     }
     
     Burble.prototype.create_text_input = function(id, label)
@@ -131,7 +229,7 @@
         ip.title = label;
         ip.id = id;
         ip.value = label;
-        ip.style.color = '#ccc'
+        ip.style.color = '#ccc';
 	    ip.addEventListener('focus', function(e)
 	    {
             if (this.value == this.title)
@@ -159,7 +257,7 @@
         ip.title = label;
         ip.id = id;
         ip.value = label;
-        ip.style.color = '#ccc'
+        ip.style.color = '#ccc';
 	    ip.addEventListener('focus', function(e)
 	    {
             if (this.value == this.title)
