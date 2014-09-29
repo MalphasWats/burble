@@ -1,0 +1,8 @@
+---
+layout: index
+title: 22:13:19
+date: 2014-09-29 22:13:19
+---
+Handy [date reference][dates] for liquid templates
+
+[dates]: http://docs.shopify.com/themes/liquid-documentation/filters/additional-filters#date
