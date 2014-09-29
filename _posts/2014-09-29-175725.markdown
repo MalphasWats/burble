@@ -1,0 +1,6 @@
+---
+layout: index
+title: 17:57:25
+date: 2014-09-29 17:57:25
+---
+Mobile safari test
