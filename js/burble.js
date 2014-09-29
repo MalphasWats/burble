@@ -84,7 +84,7 @@
 			
 			var s = document.createElement('input');
 			s.type = 'submit';
-			s.value = 'post';
+			s.value = 'login';
 			f.appendChild(s);
 			
 			f.addEventListener('submit', burble.login);
