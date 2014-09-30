@@ -1,0 +1,6 @@
+---
+layout: index
+title: 08:50:11
+date: 2014-09-30 08:50:11
+---
+[Evolving Images](http://www.nihilogic.dk/labs/evolving-images/). I love this kind of stuff. It's really clever.
