@@ -130,7 +130,7 @@
 			f.token.value != '' && f.token.value != f.token.title)
         {
 			var filename = "index.html";
-			var url = 'https://api.github.com/repos/'+f.username.value+'/burble/contents/'+filename+'?path='+filename+'&ref=gh-pages';
+			var url = 'https://api.github.com/repos/'+f.username.value+'/burble/contents/'+filename+'?path='+filename+'&ref=gh-pages&username='+f.username.value;
 			
 			var req = new XMLHttpRequest()
 			req.onreadystatechange = function()
@@ -189,9 +189,9 @@
 		
 		var filename = "_posts/"+date+"-"+time.replace(/:/g, "")+".markdown";
 		
-		var url = 'https://api.github.com/repos/'+localStorage.github_username+'/burble/contents/'+filename
+		var url = 'https://api.github.com/repos/'+localStorage.github_username+'/burble/contents/'+filename+'?username='+localStorage.github_username;
 		
-		var req = new XMLHttpRequest()
+		var req = new XMLHttpRequest();
 		req.onreadystatechange = function()
 		{
 			if (this.readyState == 4)
