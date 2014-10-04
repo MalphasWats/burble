@@ -1,0 +1,8 @@
+---
+layout: index
+title: 10:17:22
+date: 2014-10-04 10:17:22
+---
+Collecting web-gl resources
+
+[webgl pre-tutorial](http://my2iu.blogspot.co.uk/2011/11/webgl-pre-tutorial-part-1.html?m=1)
