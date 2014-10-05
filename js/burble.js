@@ -214,7 +214,7 @@
 					burble.collapse_compose_panel(e);
 					
 					var p = document.createElement('p');
-					p.id="indicator";
+					p.style.textAlign="center";
 					var i = document.createElement('img');
 					i.src="css/assets/indicator.gif";
 					p.appendChild(i);
