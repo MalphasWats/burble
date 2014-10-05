@@ -216,7 +216,7 @@
 					var p = document.createElement('p');
 					p.id="indicator";
 					var i = document.createElement('img');
-					i.src="/css/assets/indicator.gif";
+					i.src="css/assets/indicator.gif";
 					p.appendChild(i);
 					
 					var b = document.getElementById('blurbs');
