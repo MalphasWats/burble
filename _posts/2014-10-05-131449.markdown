@@ -1,0 +1,9 @@
+---
+layout: index
+title: 13:14:49
+date: 2014-10-05 13:14:49
+---
+Created a nice [repository][REPO] for my [isometric & lighting demo][DEMO]
+
+[REPO]: https://github.com/MalphasWats/iso
+[DEMO]: http://games.subdimension.co.uk/iso/
