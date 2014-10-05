@@ -212,6 +212,20 @@
 				else
 				{
 					burble.collapse_compose_panel(e);
+					
+					var p = document.createElement('p');
+					p.id="indicator";
+					var i = document.createElement('img');
+					i.src="/css/assets/indicator.gif";
+					p.appendChild(i);
+					
+					var b = document.getElementById('blurbs');
+					b.insertBefore(p, b.firstChild);
+					
+					setTimeout(function()
+					{
+					    document.location.reload(true);
+					}, 8000);
 				}
 			}
 		}
