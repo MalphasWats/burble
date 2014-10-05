@@ -59,10 +59,19 @@
 		{
 			t = document.createElement('textarea');
 			t.id='blurb';
-			t.cols = '25';
-			t.rows = '8';
+			t.cols = '35';
+			t.rows = '6';
         
 			f.appendChild(t);
+			
+			var c = document.createElement('span');
+			c.innerHTML = '0';
+			f.appendChild(c);
+			
+			t.addEventListener('keyup', function(e)
+			{
+    			this.innerHTML = e.target.value.length
+			}.bind(c));
         
 			var s = document.createElement('input');
 			s.type = 'submit';

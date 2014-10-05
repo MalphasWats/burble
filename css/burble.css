@@ -4,9 +4,51 @@ div#burble
     right:20px;
     top:0px;
     text-align: right;
+    font-size:12pt;
+    
+    background-color: white;
+    
+    border-bottom: 2px solid #829f14;
+    border-right: 2px solid #829f14;
+    border-left: 2px solid #829f14;
 }
 
-div#burble form input
+div#burble a
+{
+    padding:2px 6px;
+    color:#829f14;
+    text-decoration: none;
+}
+
+div#burble form
+{
+    padding:4px 12px;
+}
+
+div#burble form input, div#burble form textarea
 {
     display:block;
+    margin:4px 0px;
+    padding:2px 6px;
+    
+    -webkit-appearance: none;
+    border:1px solid #ccc;
+    font:inherit;
+}
+
+div#burble form input[type=submit]
+{
+    color:white;
+    border:none;
+    background-color: #829f14;
+    float:right;
+    cursor: pointer;
+    margin-bottom:6px;
+}
+
+div#burble form span
+{
+    display:inline-block;
+    padding:6px;
+    color:#999;
 }
