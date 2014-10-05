@@ -3,7 +3,7 @@ layout: index
 title: Burble
 ---
 
-{% for post in site.posts limit:20 %}
+{% for post in site.posts limit:30 %}
     	    <article class="blurb">
             	    {{post.content}}
         	    <p class="blurb_date">{{ post.date | date: "%a, %d %B %Y %T" }}</p>
