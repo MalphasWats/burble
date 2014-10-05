@@ -1,0 +1,25 @@
+---
+layout: nil
+---
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0">
+<channel>
+    <title>subDimension burble feed</title>
+    <link>http://www.subdimension.co.uk/burble/</link>
+    <description/>
+    <copyright>All rights reserved.</copyright>
+    <language>en-GB</language>
+    <lastBuildDate>{{ site.time | date_to_xmlschema }}</lastBuildDate>
+    <ttl>1440</ttl>
+    {% for item in site.posts limit:30 %}
+    <item>
+        <link>http://www.subdimension.co.uk{{item.url}}</link>
+        <guid>http://www.subdimension.co.uk{{item.url}}</guid>
+        <description><![CDATA[
+        {{item.content}}
+        ]]></description>
+        <pubDate>{{item.date | date_to_xmlschema}}</pubDate>
+    </item>
+    {% endfor %}
+</channel>
+</rss>
