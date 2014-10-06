@@ -1,0 +1,6 @@
+---
+layout: index
+title: 12:30:59
+date: 2014-10-06 12:30:59
+---
+Sadness: I can't post Emoji characters. Javascript's Btoa function doesn't like them :'(
