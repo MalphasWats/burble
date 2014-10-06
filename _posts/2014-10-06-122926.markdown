@@ -1,0 +1,8 @@
+---
+layout: index
+title: 12:29:26
+date: 2014-10-06 12:29:26
+---
+mod_wsgi IOError: failed to write data
+
+No idea why I get this with one of my apps. I just added more processes and more threads. :)
