@@ -1,0 +1,6 @@
+---
+layout: index
+title: 09:13:42
+date: 2014-10-07 09:13:42
+---
+Execution of arbitrary javascript in blurbs might be an issue if I ever implement a follow feature.
