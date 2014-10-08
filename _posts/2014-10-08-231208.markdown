@@ -1,0 +1,6 @@
+---
+layout: index
+title: 23:12:08
+date: 2014-10-08 23:12:08
+---
+[Prompt 2](http://panic.com/prompt/) is very slick.
