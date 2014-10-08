@@ -64,6 +64,14 @@
         
 			f.appendChild(t);
 			
+			var u = document.createElement('input');
+			u.type = 'file'
+			u.setAttribute('multiple', '');
+			u.name = 'files[]';
+			u.id = 'files';
+			
+			f.appendChild(u);
+			
 			var c = document.createElement('span');
 			c.innerHTML = '0';
 			f.appendChild(c);
@@ -200,49 +208,62 @@
 		
 		var url = 'https://api.github.com/repos/'+localStorage.github_username+'/burble/contents/'+filename+'?username='+localStorage.github_username;
 		
-		var req = new XMLHttpRequest();
-		req.onreadystatechange = function()
+		for (var i=0 ; i<f.files.files.length ; i++)
 		{
-			if (this.readyState == 4)
+			blurb += "\n\n";
+			if (f.files.files[i].type.match('image.*')) 
 			{
-				if (this.status != 200 && this.status != 201)
-				{
-					console.log("An error occurred whilst trying to make request", this.status, this.responseText)
-				}
-				else
-				{
-					burble.collapse_compose_panel(e);
-					
-					var p = document.createElement('p');
-					p.style.textAlign="center";
-					var i = document.createElement('img');
-					i.src="css/assets/indicator.gif";
-					p.appendChild(i);
-					
-					var b = document.getElementById('blurbs');
-					b.insertBefore(p, b.firstChild);
-					
-					setTimeout(function()
-					{
-					    document.location.reload(true);
-					}, 8000);
-				}
+				blurb += "!";
 			}
-		}
-	
-		req.open('PUT', url);
-		req.setRequestHeader("Authorization", "token "+localStorage.github_api_key);
-		req.setRequestHeader("User-Agent", localStorage.github_username);
+			blurb += '['+f.files.files[i].name+'](' + document.location.href + 'files/' + f.files.files[i].name + ')';
 		
-		data = {
+			var r = new FileReader();
+			r.addEventListener('load', function(e)
+			{
+				var content = e.target.result.split(',')[1];
+				
+				var filename = "files/"+this.name;
+				var url = 'https://api.github.com/repos/'+localStorage.github_username+'/burble/contents/'+filename+'?username='+localStorage.github_username;
+				
+				var data = {
+					path: filename,
+					content: content,
+					message: 'upload file ' + this.name,
+					branch: 'gh-pages',
+					committer: {name: localStorage.github_username, email: localStorage.github_email}
+				};
+				
+				burble.put(data, url); //, function() { console.log('uploaded'); });
+			}.bind(f.files.files[i]));
+			r.readAsDataURL(f.files.files[i])
+		}
+		
+		var data = {
 			path: filename,
-			content: btoa(yaml+f.blurb.value),
+			content: btoa(blurb),
 			message: 'post blurb',
 			branch: 'gh-pages',
 			committer: {name: localStorage.github_username, email: localStorage.github_email}
 		};
+		
+		burble.put(data, url, function()
+		{
+			burble.collapse_compose_panel(e);
 					
-		req.send(JSON.stringify(data));
+			var p = document.createElement('p');
+			p.style.textAlign="center";
+			var i = document.createElement('img');
+			i.src="css/assets/indicator.gif";
+			p.appendChild(i);
+			
+			var b = document.getElementById('blurbs');
+			b.insertBefore(p, b.firstChild);
+			
+			setTimeout(function()
+			{
+				document.location.reload(true);
+			}, 8000);
+		});
     }
     
     Burble.prototype.create_text_input = function(id, label)
@@ -301,6 +322,36 @@
         });
         
         return ip;
+    }
+	
+	
+	Burble.prototype.put = function(data, url, callback)
+    {
+        var req = new XMLHttpRequest();
+		req.callback = callback;
+		req.onreadystatechange = function()
+		{
+			if (this.readyState == 4)
+			{
+				if (this.status != 200 && this.status != 201)
+				{
+					console.log("An error occurred whilst trying to make request", this.status, this.responseText)
+				}
+				else
+				{
+					if (typeof this.callback !== 'undefined')
+                    {
+                        this.callback(this.responseText);
+					}
+				}
+			}
+		}
+	
+		req.open('PUT', url);
+		req.setRequestHeader("Authorization", "token "+localStorage.github_api_key);
+		req.setRequestHeader("User-Agent", localStorage.github_username);
+					
+		req.send(JSON.stringify(data));
     }
     
     window.burble = new Burble();

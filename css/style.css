@@ -203,7 +203,7 @@ article blockquote
 	border-right: 1px solid #444;
 }
 
-article img {float:left; margin:0 4px 4px 0; max-width:660px;}
+article img {margin:0 4px 4px 0; max-width:660px;}
 
 article p.blurb_date
 {
