@@ -226,7 +226,7 @@
 			{
 				var content = e.target.result.split(',')[1];
 				
-				if (f.files.files[i].type.match('image.*')) 
+				if (this.type.match('image.*')) 
 				{
 					var filename = "files/images/"+this.name;
 				}
