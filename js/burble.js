@@ -213,16 +213,27 @@
 			blurb += "\n\n";
 			if (f.files.files[i].type.match('image.*')) 
 			{
-				blurb += "!";
+				blurb += '!['+f.files.files[i].name+'](' + document.location.href + 'files/images/' + f.files.files[i].name + ')';
 			}
-			blurb += '['+f.files.files[i].name+'](' + document.location.href + 'files/' + f.files.files[i].name + ')';
+			else
+			{
+				blurb += '['+f.files.files[i].name+'](' + document.location.href + 'files/' + f.files.files[i].name + ')';
+			}
+			
 		
 			var r = new FileReader();
 			r.addEventListener('load', function(e)
 			{
 				var content = e.target.result.split(',')[1];
 				
-				var filename = "files/"+this.name;
+				if (f.files.files[i].type.match('image.*')) 
+				{
+					var filename = "files/images/"+this.name;
+				}
+				else
+				{
+					var filename = "files/"+this.name;
+				}
 				var url = 'https://api.github.com/repos/'+localStorage.github_username+'/burble/contents/'+filename+'?username='+localStorage.github_username;
 				
 				var data = {
