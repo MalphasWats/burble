@@ -1,0 +1,8 @@
+---
+layout: index
+title: 23:13:08
+date: 2014-10-08 23:13:08
+---
+Testing posting an image from Mobile Safari.
+
+![image.jpg](http://www.subdimension.co.uk/burble/files/images/image.jpg)
