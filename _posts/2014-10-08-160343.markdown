@@ -1,0 +1,10 @@
+---
+layout: index
+title: 16:03:43
+date: 2014-10-08 16:03:43
+---
+Testing posting 2 images.
+
+![colours_small.png](http://www.subdimension.co.uk/burble/files/images/colours_small.png)
+
+![small_brick.png](http://www.subdimension.co.uk/burble/files/images/small_brick.png)
