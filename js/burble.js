@@ -57,7 +57,27 @@
 		
 		if (burble.is_logged_in())
 		{
-			t = document.createElement('textarea');
+			var ts = new Date();
+			var time = ('0' + ts.getHours()).slice(-2) + ':' + ('0' + ts.getMinutes()).slice(-2) + ':' + ('0' + ts.getSeconds()).slice(-2);
+			var date = ts.getFullYear() + '-' + ('0' + (ts.getMonth()+1)).slice(-2) + '-' + ('0' + ts.getDate()).slice(-2);
+			
+			var dt = document.createElement('input');
+			dt.type = 'hidden';
+			dt.name = 'blurb_date';
+			dt.id = 'blurb_date';
+			dt.value = date;
+			
+			f.appendChild(dt);
+			
+			var tm = document.createElement('input');
+			tm.type = 'hidden';
+			tm.name = 'blurb_time';
+			tm.id = 'blurb_time';
+			tm.value = time;
+			
+			f.appendChild(tm);
+			
+			var t = document.createElement('textarea');
 			t.id='blurb';
 			t.cols = '35';
 			t.rows = '6';
@@ -69,6 +89,31 @@
 			u.setAttribute('multiple', '');
 			u.name = 'files[]';
 			u.id = 'files';
+			
+			u.addEventListener('change', function(e)
+			{
+				var b = document.getElementById('burble');
+				var f = b.getElementsByTagName('form')[0];
+				
+				var m = f.blurb.value.indexOf('<!-- files -->')
+				if (m == -1)
+				{
+					f.blurb.value  += "\n\n<!-- files -->\n";
+				}
+				else
+				{
+					f.blurb.value = f.blurb.value.substring(0, m) + "<!-- files -->\n";
+				}
+				
+				for (var i=0 ; i<f.files.files.length ; i++)
+				{
+					if (f.files.files[i].type.match('image.*')) 
+					{
+						f.blurb.value  += '!';
+					}
+					f.blurb.value  += '['+f.files.files[i].name+'](' + document.location.href + 'files/' + f.blurb_date.value + '-' + f.blurb_time.value.replace(/:/g, "") + '/' + f.files.files[i].name + ')';
+				}
+			});
 			
 			f.appendChild(u);
 			
@@ -197,12 +242,11 @@
 			return;
 		}
 		
-		var ts = new Date();
-		var time = ('0' + ts.getHours()).slice(-2) + ':' + ('0' + ts.getMinutes()).slice(-2) + ':' + ('0' + ts.getSeconds()).slice(-2);
-		var date = ts.getFullYear() + '-' + ('0' + (ts.getMonth()+1)).slice(-2) + '-' + ('0' + ts.getDate()).slice(-2);
+		var time = f.blurb_time.value;
+		var date = f.blurb_date.value;
 		var yaml = "---\nlayout: index\ntitle: "+time+"\ndate: "+date+" "+time+"\n---\n";
 		
-		var blurb = yaml + f.blurb.value;
+		var blurb = yaml + f.blurb.value.replace("<!-- files -->\n", '');
 		
 		var filename = "_posts/"+date+"-"+time.replace(/:/g, "")+".markdown";
 		
@@ -210,30 +254,13 @@
 		
 		for (var i=0 ; i<f.files.files.length ; i++)
 		{
-			blurb += "\n\n";
-			if (f.files.files[i].type.match('image.*')) 
-			{
-				blurb += '!['+f.files.files[i].name+'](' + document.location.href + 'files/images/' + f.files.files[i].name + ')';
-			}
-			else
-			{
-				blurb += '['+f.files.files[i].name+'](' + document.location.href + 'files/' + f.files.files[i].name + ')';
-			}
-			
-		
+			f.files.files[i].folder = "files/"+date+"-"+time.replace(/:/g, "");
 			var r = new FileReader();
 			r.addEventListener('load', function(e)
 			{
 				var content = e.target.result.split(',')[1];
 				
-				if (this.type.match('image.*')) 
-				{
-					var filename = "files/images/"+this.name;
-				}
-				else
-				{
-					var filename = "files/"+this.name;
-				}
+				var filename = this.folder + "/" + this.name;
 				var url = 'https://api.github.com/repos/'+localStorage.github_username+'/burble/contents/'+filename+'?username='+localStorage.github_username;
 				
 				var data = {
@@ -244,7 +271,7 @@
 					committer: {name: localStorage.github_username, email: localStorage.github_email}
 				};
 				
-				burble.put(data, url); //, function() { console.log('uploaded'); });
+				burble.put(data, url);
 			}.bind(f.files.files[i]));
 			r.readAsDataURL(f.files.files[i])
 		}
