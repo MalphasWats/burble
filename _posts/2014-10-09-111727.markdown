@@ -1,8 +1,0 @@
----
-layout: index
-title: 11:17:27
-date: 2014-10-09 11:17:27
----
-Upload multiple images in iOS
-
-![image.jpg](http://www.subdimension.co.uk/burble/files/2014-10-09-111727/image.jpg)![image.jpg](http://www.subdimension.co.uk/burble/files/2014-10-09-111727/image.jpg)
