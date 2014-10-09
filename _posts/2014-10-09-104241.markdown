@@ -5,4 +5,4 @@ date: 2014-10-09 10:42:41
 ---
 Testing reworked upload feature.
 
-![colours_small.png](http://www.subdimension.co.uk/blurb/files/2014-10-09104241/colours_small.png)
+![colours_small.png](http://www.subdimension.co.uk/blurb/files/2014-10-09-104241/colours_small.png)
