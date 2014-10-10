@@ -4,7 +4,7 @@ layout: nil
 {"blurbs":[
 {% for post in site.posts %}{
     "content": {{post.content | jsonify}},
-    "date": "{{ post.date | date: "%a, %d %B %Y %T" }}",
+    "date": "{{ post.date | date: "%a, %d %B %Y %T" }}"
 },
-{% endfor %}
+{% endfor %}{ "content": "", "date": ""}
 ]}
