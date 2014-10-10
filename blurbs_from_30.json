@@ -1,0 +1,10 @@
+---
+layout: nil
+---
+{"blurbs":[
+{% for post in site.posts offset:30 %}{
+    "content": {{post.content | jsonify}},
+    "date": "{{ post.date | date: "%a, %d %B %Y %T" }}"
+}{% unless forloop.last %},{% endunless %}
+{% endfor %}
+]}
