@@ -111,7 +111,7 @@
 					{
 						f.blurb.value  += '!';
 					}
-					f.blurb.value  += '['+f.files.files[i].name+'](' + document.location.href + 'files/' + f.blurb_date.value + '-' + f.blurb_time.value.replace(/:/g, "") + '/' + f.files.files[i].name + ')';
+					f.blurb.value  += '['+f.files.files[i].name+'](' + document.location.href + 'files/' + f.blurb_date.value + '-' + f.blurb_time.value.replace(/:/g, "") + '/' + f.files.files[i].name + ')\n';
 				}
 			});
 			
