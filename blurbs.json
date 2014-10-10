@@ -6,5 +6,5 @@ layout: nil
     "content": {{post.content | jsonify}},
     "date": "{{ post.date | date: "%a, %d %B %Y %T" }}"
 },
-{% endfor %}{ "content": "", "date": ""}
+{% endfor %}
 ]}
