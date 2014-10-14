@@ -6,6 +6,6 @@ title: Burble
 {% for post in site.posts limit:30 %}
     	    <article class="blurb">
             	    {{post.content}}
-        	    <p class="blurb_date">{{ post.date | date: "%a, %d %B %Y %T" }}</p>
+        	    <p class="blurb_date"><a href="/burble{{post.url}}">{{ post.date | date: "%a, %d %B %Y %T" }}</a></p>
     	    </article>
 {% endfor %}
