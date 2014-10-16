@@ -6,3 +6,6 @@ date: 2014-10-16 11:57:34
 Posting a new item to be edited. Edited the item to add an image.
 
 Edited again to test splitting out of yaml front matter.
+
+
+![logo.png](file:///Users/mikewatts/Projects/burble/index_.htmlfiles/2014-10-16-115734/logo.png)
