@@ -8,15 +8,14 @@
 		var action_link = document.createElement('a');
 		action_link.href='#';
 		
-		action_link.collapse = this.collapse_compose_panel;
-		action_link.expand = this.expand_compose_panel;
-		
-		action_link.addEventListener('click', action_link.expand);
+		action_link.addEventListener('click', this.expand_compose_panel);
 		
 		/* Check to see if authenticated */
 		if (this.is_logged_in())
 		{
 			action_link.innerHTML = 'compose';
+            
+            this.add_edit_links();
 		}
 		else
 		{
@@ -25,13 +24,65 @@
 		
         panel.appendChild(action_link);
 		
-        document.body.insertBefore(panel, document.body.firstChild)
+        document.body.insertBefore(panel, document.body.firstChild);
     }
 	
 	Burble.prototype.is_logged_in = function()
 	{
-		return (localStorage.github_username && localStorage.github_email && localStorage.github_api_key)
+		return (localStorage.github_username && localStorage.github_email && localStorage.github_api_key);
 	}
+    
+    Burble.prototype.add_edit_links = function()
+    {
+        var permalinks = document.getElementsByClassName('blurb_date');
+        for (var i=0 ; i<permalinks.length ; i++)
+        {
+            var url = permalinks[i].getElementsByTagName('a')[0].href;
+            var a = document.createElement('a');
+            a.href = '#' + url.substring(url.indexOf('/burble/')+8, url.indexOf('.html')).replace(/\//g, '-');
+            a.innerHTML = 'edit';
+            
+            a.addEventListener('click', function(e)
+            {
+                e.preventDefault();
+                
+                burble.collapse_compose_panel(e);
+                burble.expand_compose_panel(e);
+                
+                var filename = '_posts/' + this.href.substr(this.href.indexOf('#')+1) + '.markdown';
+                var url = 'https://api.github.com/repos/'+localStorage.github_username+'/burble/contents/'+filename+'?path='+filename+'&ref=gh-pages&username='+localStorage.github_username;
+                
+                burble.get(url, function(responseText)
+                {
+                    var post = JSON.parse(responseText);
+                    console.log(post)
+                    var b = document.getElementById('burble');
+                    var f = b.getElementsByTagName('form')[0];
+                    f.blurb.value = atob(post.content);
+                    
+                    var path = document.createElement('input');
+                    path.type = 'hidden';
+                    path.name = 'path';
+                    path.id = 'path';
+                    path.value = post.path;
+                    
+                    f.appendChild(path);
+                    
+                    var sha = document.createElement('input');
+                    sha.type = 'hidden';
+                    sha.name = 'sha';
+                    sha.id = 'sha';
+                    sha.value = post.sha;
+                    
+                    f.appendChild(sha);
+                    
+                }, burble.collapse_compose_panel);
+            });
+            
+            permalinks[i].appendChild(document.createTextNode(' | '));
+            permalinks[i].appendChild(a);
+        }
+    }
 	
 	Burble.prototype.expand_login_panel = function(e)
     {
@@ -166,7 +217,7 @@
         var b = document.getElementById('burble');
         var a = b.firstChild;
         var f = a.nextSibling;
-        
+        if (!f) return;
         b.removeChild(f);
         
         a.removeEventListener('click', burble.collapse_compose_panel);
@@ -241,14 +292,25 @@
 			
 			return;
 		}
+        
+        var time = f.blurb_time.value;
+        var date = f.blurb_date.value;
+        
+        if (f.path && f.sha)
+        {
+            var blurb = f.blurb.value.replace("<!-- files -->\n", '');
+            var filename = f.path.value;
+            var sha = f.sha.value;
+        }
+		else
+        {
+            var yaml = "---\nlayout: index\ntitle: "+time+"\ndate: "+date+" "+time+"\n---\n";
 		
-		var time = f.blurb_time.value;
-		var date = f.blurb_date.value;
-		var yaml = "---\nlayout: index\ntitle: "+time+"\ndate: "+date+" "+time+"\n---\n";
-		
-		var blurb = yaml + f.blurb.value.replace("<!-- files -->\n", '');
-		
-		var filename = "_posts/"+date+"-"+time.replace(/:/g, "")+".markdown";
+            var blurb = yaml + f.blurb.value.replace("<!-- files -->\n", '');
+        
+            var filename = "_posts/"+date+"-"+time.replace(/:/g, "")+".markdown";
+            var sha = false;
+        }
 		
 		var url = 'https://api.github.com/repos/'+localStorage.github_username+'/burble/contents/'+filename+'?username='+localStorage.github_username;
 		
@@ -283,6 +345,11 @@
 			branch: 'gh-pages',
 			committer: {name: localStorage.github_username, email: localStorage.github_email}
 		};
+        
+        if (sha)
+        {
+            data.sha = sha;
+        }
 		
 		burble.put(data, url, function()
 		{
@@ -360,6 +427,39 @@
         });
         
         return ip;
+    }
+    
+    Burble.prototype.get = function(url, callback_20x, callback_404)
+    {
+        var req = new XMLHttpRequest();
+		req.callback_20x = callback_20x;
+        req.callback_404 = callback_404;
+		req.onreadystatechange = function()
+		{
+			if (this.readyState == 4)
+			{
+				if (this.status != 200 && this.status != 201)
+				{
+					if (typeof this.callback_404 !== 'undefined')
+                    {
+                        this.callback_404(this.responseText);
+					}
+				}
+				else
+				{
+					if (typeof this.callback_20x !== 'undefined')
+                    {
+                        this.callback_20x(this.responseText);
+					}
+				}
+			}
+		}
+	
+		req.open('GET', url);
+		req.setRequestHeader("Authorization", "token "+localStorage.github_api_key);
+		req.setRequestHeader("User-Agent", localStorage.github_username);
+					
+		req.send();
     }
 	
 	
