@@ -362,6 +362,7 @@
         if (sha)
         {
             data.sha = sha;
+            data.message = 'edit blurb';
         }
 		
 		burble.put(data, url, function()
