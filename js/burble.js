@@ -55,10 +55,24 @@
                 burble.get(url, function(responseText)
                 {
                     var post = JSON.parse(responseText);
-                    console.log(post)
                     var b = document.getElementById('burble');
                     var f = b.getElementsByTagName('form')[0];
-                    f.blurb.value = atob(post.content);
+                    
+                    post.content = atob(post.content);
+                    var i = post.content.indexOf("---", 3);
+                    
+                    var post_content = post.content.substr(i+4);
+                    var post_yaml = post.content.substr(0, i+4);
+                    
+                    f.blurb.value = post_content;
+                    
+                    var yaml = document.createElement('input');
+                    yaml.type = 'hidden';
+                    yaml.name = 'yaml';
+                    yaml.id = 'yaml';
+                    yaml.value = post_yaml;
+                    
+                    f.appendChild(yaml);
                     
                     var path = document.createElement('input');
                     path.type = 'hidden';
@@ -311,7 +325,7 @@
         
         if (f.path && f.sha)
         {
-            var blurb = f.blurb.value.replace("<!-- files -->\n", '');
+            var blurb = f.yaml.value + f.blurb.value.replace("<!-- files -->\n", '');
             var filename = f.path.value;
             var sha = f.sha.value;
         }
