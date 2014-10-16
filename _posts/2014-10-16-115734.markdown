@@ -6,5 +6,3 @@ date: 2014-10-16 11:57:34
 Posting a new item to be edited. Edited the item to add an image.
 
 Edited again to test splitting out of yaml front matter.
-
-![logo.png](http://www.subdimension.co.uk/burble/files/2014-10-16-122138/logo.png)
