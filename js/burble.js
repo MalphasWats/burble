@@ -49,8 +49,16 @@
                 burble.collapse_compose_panel(e);
                 burble.expand_compose_panel(e);
                 
-                var filename = '_posts/' + this.href.substr(this.href.indexOf('#')+1) + '.markdown';
+                var ts_part = this.href.substr(this.href.indexOf('#')+1);
+                
+                var filename = '_posts/' + ts_part + '.markdown';
                 var url = 'https://api.github.com/repos/'+localStorage.github_username+'/burble/contents/'+filename+'?path='+filename+'&ref=gh-pages&username='+localStorage.github_username;
+                
+                var b = document.getElementById('burble');
+                var f = b.getElementsByTagName('form')[0];
+                
+                f.blurb_date.value = ts_part.substr(0, 10);
+                f.blurb_time.value = ts_part.substr(11, 2) + ':' + ts_part.substr(13, 2) + ':' + ts_part.substr(15, 2);
                 
                 burble.get(url, function(responseText)
                 {
