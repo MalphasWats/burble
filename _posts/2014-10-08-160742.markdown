@@ -3,4 +3,4 @@ layout: index
 title: 16:07:42
 date: 2014-10-08 16:07:42
 ---
-Test post.
+Test post. Edited!
