@@ -1,0 +1,6 @@
+---
+layout: index
+title: 11:57:34
+date: 2014-10-16 11:57:34
+---
+Posting a new item to be edited.
