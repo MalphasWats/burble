@@ -264,6 +264,8 @@
 						localStorage.github_api_key = f.token.value;
 						
 						burble.collapse_compose_panel(e);
+                        
+                        burble.add_edit_links();
 					}
 				}
 			}
@@ -276,6 +278,22 @@
 		}
 	}
     
+    Burble.prototype.logout = function(e)
+    {
+        delete localStorage.github_username;
+        delete localStorage.github_email;
+        delete localStorage.github_api_key;
+        
+        burble.collapse_compose_panel(e);
+        
+        var permalinks = document.getElementsByClassName('blurb_date');
+        for (var i=0 ; i<permalinks.length ; i++)
+        {
+            permalinks[i].removeChild(permalinks[i].lastChild);
+            permalinks[i].removeChild(permalinks[i].lastChild);
+        }
+    }
+    
     Burble.prototype.submit_blurb = function(e)
     {
         e.preventDefault();
@@ -284,12 +302,7 @@
 		
 		if (f.blurb.value == 'logout')
 		{
-			delete localStorage.github_username;
-			delete localStorage.github_email;
-			delete localStorage.github_api_key;
-			
-			burble.collapse_compose_panel(e);
-			
+            burble.logout(e);
 			return;
 		}
         
