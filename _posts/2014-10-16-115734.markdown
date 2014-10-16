@@ -3,4 +3,6 @@ layout: index
 title: 11:57:34
 date: 2014-10-16 11:57:34
 ---
-Posting a new item to be edited.
+Posting a new item to be edited. Edited the item to add an image.
+
+![logo.png](http://www.subdimension.co.uk/burble/files/2014-10-16-122138/logo.png)
