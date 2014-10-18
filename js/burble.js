@@ -65,8 +65,7 @@
                     var post = JSON.parse(responseText);
                     var b = document.getElementById('burble');
                     var f = b.getElementsByTagName('form')[0];
-                    
-                    post.content = atob(post.content);
+                    post.content = atob(post.content.replace(/\n/g, ''));
                     var i = post.content.indexOf("---", 3);
                     
                     var post_content = post.content.substr(i+4);
